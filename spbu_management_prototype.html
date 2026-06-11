@@ -1,0 +1,427 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+:root {
+  --spbu-red: #D32F2F;
+  --spbu-yellow: #F9A825;
+  --spbu-red-light: #FFEBEE;
+  --spbu-yellow-light: #FFF8E1;
+  --sidebar-w: 200px;
+}
+#app { display: flex; min-height: 600px; background: var(--color-background-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; border: 0.5px solid var(--color-border-tertiary); }
+
+/* LOGIN */
+#login-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; padding: 2rem; }
+.login-logo { width: 56px; height: 56px; background: var(--spbu-red); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
+.login-logo i { font-size: 28px; color: white; }
+.login-box { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.5rem; width: 100%; max-width: 340px; }
+.login-box h2 { font-size: 18px; font-weight: 500; margin-bottom: 4px; color: var(--color-text-primary); }
+.login-box p { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1.5rem; }
+.login-box label { font-size: 13px; color: var(--color-text-secondary); display: block; margin-bottom: 4px; }
+.login-box input { width: 100%; margin-bottom: 1rem; padding: 8px 12px; font-size: 14px; }
+.demo-accounts { margin-top: 1rem; padding-top: 1rem; border-top: 0.5px solid var(--color-border-tertiary); }
+.demo-accounts p { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 8px; }
+.demo-btn { width: 100%; padding: 8px 12px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: var(--color-background-secondary); cursor: pointer; font-size: 13px; text-align: left; margin-bottom: 6px; color: var(--color-text-primary); display: flex; align-items: center; gap: 8px; }
+.demo-btn:hover { background: var(--color-background-tertiary); }
+.demo-btn .role-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; margin-left: auto; }
+.badge-owner { background: #FFEBEE; color: #C62828; }
+.badge-manager { background: #FFF8E1; color: #F57F17; }
+.login-btn { width: 100%; padding: 10px; background: var(--spbu-red); color: white; border: none; border-radius: var(--border-radius-md); font-size: 14px; font-weight: 500; cursor: pointer; margin-top: 0.5rem; }
+.login-btn:hover { background: #B71C1C; }
+
+/* SIDEBAR */
+#sidebar { width: var(--sidebar-w); background: var(--color-background-primary); border-right: 0.5px solid var(--color-border-tertiary); display: flex; flex-direction: column; flex-shrink: 0; }
+.sidebar-header { padding: 1rem; border-bottom: 0.5px solid var(--color-border-tertiary); display: flex; align-items: center; gap: 10px; }
+.sidebar-logo { width: 32px; height: 32px; background: var(--spbu-red); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.sidebar-logo i { font-size: 16px; color: white; }
+.sidebar-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); line-height: 1.3; }
+.sidebar-subtitle { font-size: 11px; color: var(--color-text-secondary); }
+.nav-section { padding: 0.75rem 0; }
+.nav-label { font-size: 11px; color: var(--color-text-tertiary); padding: 0 1rem; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+.nav-item { display: flex; align-items: center; gap: 8px; padding: 8px 1rem; cursor: pointer; font-size: 13px; color: var(--color-text-secondary); border-left: 2px solid transparent; }
+.nav-item:hover { background: var(--color-background-secondary); color: var(--color-text-primary); }
+.nav-item.active { background: #FFEBEE; color: var(--spbu-red); border-left: 2px solid var(--spbu-red); font-weight: 500; }
+.nav-item i { font-size: 16px; width: 20px; }
+.sidebar-footer { margin-top: auto; padding: 1rem; border-top: 0.5px solid var(--color-border-tertiary); }
+.user-info { display: flex; align-items: center; gap: 8px; }
+.user-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--spbu-red); display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: 500; flex-shrink: 0; }
+.user-name { font-size: 12px; font-weight: 500; color: var(--color-text-primary); }
+.user-role { font-size: 11px; color: var(--color-text-secondary); }
+.logout-btn { margin-top: 8px; width: 100%; font-size: 12px; padding: 6px; color: var(--color-text-secondary); background: transparent; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); cursor: pointer; }
+.logout-btn:hover { background: var(--color-background-secondary); }
+
+/* MAIN */
+#main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { padding: 0.75rem 1.25rem; background: var(--color-background-primary); border-bottom: 0.5px solid var(--color-border-tertiary); display: flex; align-items: center; justify-content: space-between; }
+.topbar-title { font-size: 15px; font-weight: 500; color: var(--color-text-primary); }
+.topbar-subtitle { font-size: 12px; color: var(--color-text-secondary); }
+.spbu-selector { display: flex; gap: 6px; }
+.spbu-chip { padding: 4px 10px; border-radius: 20px; font-size: 12px; cursor: pointer; border: 0.5px solid var(--color-border-secondary); color: var(--color-text-secondary); background: var(--color-background-primary); }
+.spbu-chip.active { background: var(--spbu-red); color: white; border-color: var(--spbu-red); }
+.content { padding: 1.25rem; overflow-y: auto; flex: 1; }
+
+/* CARDS */
+.metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 1.25rem; }
+.metric-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.875rem 1rem; }
+.metric-label { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 4px; }
+.metric-value { font-size: 20px; font-weight: 500; color: var(--color-text-primary); }
+.metric-sub { font-size: 11px; color: var(--color-text-secondary); margin-top: 2px; }
+.metric-up { color: #2E7D32; }
+.metric-down { color: #C62828; }
+
+.section-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 6px; }
+.card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 1rem; }
+
+/* TABLE */
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; font-size: 11px; color: var(--color-text-secondary); font-weight: 500; padding: 6px 8px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+td { padding: 8px 8px; border-bottom: 0.5px solid var(--color-border-tertiary); color: var(--color-text-primary); }
+tr:last-child td { border-bottom: none; }
+.status-badge { font-size: 11px; padding: 3px 8px; border-radius: 20px; }
+.status-lunas { background: #E8F5E9; color: #2E7D32; }
+.status-proses { background: #FFF8E1; color: #F57F17; }
+
+/* CHART BAR */
+.bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 100px; margin: 0.5rem 0 0.25rem; }
+.bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.bar { width: 100%; border-radius: 4px 4px 0 0; background: var(--spbu-red); opacity: 0.85; min-height: 4px; }
+.bar-label { font-size: 10px; color: var(--color-text-secondary); }
+.bar-val { font-size: 10px; color: var(--color-text-primary); font-weight: 500; }
+
+/* FORM */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1rem; }
+.form-group label { font-size: 12px; color: var(--color-text-secondary); display: block; margin-bottom: 4px; }
+.form-group input, .form-group select { width: 100%; padding: 7px 10px; font-size: 13px; }
+.submit-btn { background: var(--spbu-red); color: white; border: none; border-radius: var(--border-radius-md); padding: 9px 20px; font-size: 13px; font-weight: 500; cursor: pointer; }
+.submit-btn:hover { background: #B71C1C; }
+
+/* LABA RUGI */
+.lr-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.lr-row:last-child { border-bottom: none; }
+.lr-total { display: flex; justify-content: space-between; padding: 10px 0 6px; font-size: 14px; font-weight: 500; border-top: 1.5px solid var(--color-border-primary); margin-top: 4px; }
+.lr-section { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); padding: 10px 0 4px; }
+.laba-positive { color: #2E7D32; font-weight: 500; }
+.laba-negative { color: #C62828; font-weight: 500; }
+
+.hidden { display: none !important; }
+</style>
+
+<h2 class="sr-only">Prototype aplikasi manajemen SPBU dengan fitur penjualan, gaji, dan laba rugi</h2>
+
+<div id="app">
+  <!-- LOGIN -->
+  <div id="login-screen">
+    <div class="login-logo"><i class="ti ti-building-store" aria-hidden="true"></i></div>
+    <div style="text-align:center; margin-bottom:1.5rem;">
+      <div style="font-size:18px; font-weight:500; color:var(--color-text-primary);">SPBU Manager</div>
+      <div style="font-size:13px; color:var(--color-text-secondary);">Sistem Manajemen SPBU Terpadu</div>
+    </div>
+    <div class="login-box">
+      <h2>Masuk</h2>
+      <p>Masukkan akun Anda untuk melanjutkan</p>
+      <label>Email</label>
+      <input type="email" id="email-input" placeholder="email@spbu.com" value="pemilik@spbu.com" />
+      <label>Password</label>
+      <input type="password" id="pass-input" placeholder="••••••••" value="••••••••" />
+      <button class="login-btn" onclick="doLogin()">Masuk</button>
+      <div class="demo-accounts">
+        <p>Akun demo — klik untuk isi otomatis:</p>
+        <button class="demo-btn" onclick="fillDemo('pemilik@spbu.com','Pak Budi','Pemilik','PB')">
+          <i class="ti ti-crown" style="font-size:14px; color:#C62828;" aria-hidden="true"></i>
+          pemilik@spbu.com
+          <span class="role-badge badge-owner">Pemilik</span>
+        </button>
+        <button class="demo-btn" onclick="fillDemo('manajer@spbu.com','Bu Sari','Manajer','BS')">
+          <i class="ti ti-user" style="font-size:14px; color:#F57F17;" aria-hidden="true"></i>
+          manajer@spbu.com
+          <span class="role-badge badge-manager">Manajer</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD APP -->
+  <div id="main-app" class="hidden" style="display:none; width:100%; flex-direction:row;">
+    <!-- SIDEBAR -->
+    <div id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo"><i class="ti ti-building-store" aria-hidden="true"></i></div>
+        <div>
+          <div class="sidebar-title">SPBU Manager</div>
+          <div class="sidebar-subtitle">v1.0 Prototype</div>
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">Menu</div>
+        <div class="nav-item active" onclick="showPage('dashboard',this)"><i class="ti ti-layout-dashboard" aria-hidden="true"></i> Dashboard</div>
+        <div class="nav-item" onclick="showPage('penjualan',this)"><i class="ti ti-gas-station" aria-hidden="true"></i> Penjualan</div>
+        <div class="nav-item" onclick="showPage('karyawan',this)"><i class="ti ti-users" aria-hidden="true"></i> Karyawan & Gaji</div>
+        <div class="nav-item" onclick="showPage('labarugi',this)"><i class="ti ti-report-money" aria-hidden="true"></i> Laba Rugi</div>
+      </div>
+      <div id="sidebar-footer" class="sidebar-footer">
+        <div class="user-info">
+          <div class="user-avatar" id="user-avatar">PB</div>
+          <div>
+            <div class="user-name" id="user-name">Pak Budi</div>
+            <div class="user-role" id="user-role">Pemilik</div>
+          </div>
+        </div>
+        <button class="logout-btn" onclick="doLogout()"><i class="ti ti-logout" aria-hidden="true"></i> Keluar</button>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main">
+      <div class="topbar">
+        <div>
+          <div class="topbar-title" id="page-title">Dashboard</div>
+          <div class="topbar-subtitle" id="page-sub">Ringkasan semua SPBU · Juni 2025</div>
+        </div>
+        <div class="spbu-selector" id="spbu-selector">
+          <div class="spbu-chip active" onclick="selectSPBU('all',this)">Semua</div>
+          <div class="spbu-chip" onclick="selectSPBU('A',this)">SPBU Soekarno Hatta</div>
+          <div class="spbu-chip" onclick="selectSPBU('B',this)">SPBU Dieng</div>
+        </div>
+      </div>
+
+      <div class="content">
+        <!-- PAGE: DASHBOARD -->
+        <div id="page-dashboard">
+          <div class="metric-grid">
+            <div class="metric-card">
+              <div class="metric-label">Total Penjualan Hari Ini</div>
+              <div class="metric-value" style="font-size:16px;">Rp 18,4 Jt</div>
+              <div class="metric-sub metric-up">↑ 6% vs kemarin</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Volume BBM (liter)</div>
+              <div class="metric-value">4.820 L</div>
+              <div class="metric-sub metric-up">↑ 3% vs kemarin</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Total Karyawan Aktif</div>
+              <div class="metric-value">14</div>
+              <div class="metric-sub" style="color:var(--color-text-secondary);">2 SPBU</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Laba Bersih Bulan Ini</div>
+              <div class="metric-value" style="font-size:16px;">Rp 42,1 Jt</div>
+              <div class="metric-sub metric-up">↑ 11% vs bulan lalu</div>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+            <div class="card">
+              <div class="section-title"><i class="ti ti-chart-bar" aria-hidden="true"></i> Penjualan 7 Hari Terakhir</div>
+              <div class="bar-chart" id="bar-chart"></div>
+              <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--color-text-secondary); margin-top:2px; gap:6px;" id="bar-days"></div>
+            </div>
+            <div class="card">
+              <div class="section-title"><i class="ti ti-building-store" aria-hidden="true"></i> Performa per SPBU</div>
+              <table>
+                <thead><tr><th>SPBU</th><th>Penjualan</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td>Soekarno Hatta</td><td>Rp 9,8 Jt</td><td><span class="status-badge status-lunas">Normal</span></td></tr>
+                  <tr><td>Dieng</td><td>Rp 8,6 Jt</td><td><span class="status-badge status-lunas">Normal</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="section-title"><i class="ti ti-clock" aria-hidden="true"></i> Transaksi Terbaru</div>
+            <table>
+              <thead><tr><th>Waktu</th><th>SPBU</th><th>Jenis BBM</th><th>Volume</th><th>Total</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>10:42</td><td>Soekarno Hatta</td><td>Pertalite</td><td>20 L</td><td>Rp 200.000</td><td><span class="status-badge status-lunas">Lunas</span></td></tr>
+                <tr><td>10:31</td><td>Dieng</td><td>Pertamax</td><td>30 L</td><td>Rp 435.000</td><td><span class="status-badge status-lunas">Lunas</span></td></tr>
+                <tr><td>10:18</td><td>Soekarno Hatta</td><td>Solar</td><td>50 L</td><td>Rp 315.000</td><td><span class="status-badge status-lunas">Lunas</span></td></tr>
+                <tr><td>09:55</td><td>Dieng</td><td>Pertalite</td><td>15 L</td><td>Rp 150.000</td><td><span class="status-badge status-proses">Proses</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- PAGE: PENJUALAN -->
+        <div id="page-penjualan" class="hidden">
+          <div class="card" style="margin-bottom:1rem;">
+            <div class="section-title"><i class="ti ti-plus" aria-hidden="true"></i> Input Penjualan Baru</div>
+            <div class="form-grid">
+              <div class="form-group"><label>SPBU</label><select><option>Soekarno Hatta</option><option>Dieng</option></select></div>
+              <div class="form-group"><label>Tanggal & Shift</label><select><option>11 Jun 2025 — Shift Pagi</option><option>11 Jun 2025 — Shift Sore</option><option>11 Jun 2025 — Shift Malam</option></select></div>
+              <div class="form-group"><label>Jenis BBM</label><select><option>Pertalite (Rp 10.000/L)</option><option>Pertamax (Rp 14.500/L)</option><option>Solar (Rp 6.800/L)</option><option>Pertamax Turbo (Rp 17.900/L)</option></select></div>
+              <div class="form-group"><label>Volume (Liter)</label><input type="number" placeholder="0" /></div>
+              <div class="form-group"><label>Operator</label><select><option>Ahmad (Nozzle 1)</option><option>Budi (Nozzle 2)</option><option>Citra (Nozzle 3)</option></select></div>
+              <div class="form-group"><label>Metode Pembayaran</label><select><option>Tunai</option><option>QRIS</option><option>Kartu Debit</option></select></div>
+            </div>
+            <button class="submit-btn">Simpan Transaksi</button>
+          </div>
+
+          <div class="card">
+            <div class="section-title"><i class="ti ti-table" aria-hidden="true"></i> Rekap Penjualan Hari Ini</div>
+            <table>
+              <thead><tr><th>Shift</th><th>SPBU</th><th>BBM</th><th>Volume</th><th>Gross</th><th>Operator</th></tr></thead>
+              <tbody>
+                <tr><td>Pagi</td><td>Soekarno Hatta</td><td>Pertalite</td><td>820 L</td><td>Rp 8.200.000</td><td>Ahmad</td></tr>
+                <tr><td>Pagi</td><td>Soekarno Hatta</td><td>Pertamax</td><td>110 L</td><td>Rp 1.595.000</td><td>Budi</td></tr>
+                <tr><td>Pagi</td><td>Dieng</td><td>Pertalite</td><td>760 L</td><td>Rp 7.600.000</td><td>Citra</td></tr>
+                <tr><td>Pagi</td><td>Dieng</td><td>Solar</td><td>480 L</td><td>Rp 3.264.000</td><td>Dani</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- PAGE: KARYAWAN -->
+        <div id="page-karyawan" class="hidden">
+          <div class="metric-grid" style="margin-bottom:1rem;">
+            <div class="metric-card"><div class="metric-label">Total Karyawan</div><div class="metric-value">14</div></div>
+            <div class="metric-card"><div class="metric-label">Total Gaji Bulan Ini</div><div class="metric-value" style="font-size:15px;">Rp 42 Jt</div></div>
+            <div class="metric-card"><div class="metric-label">Sudah Dibayar</div><div class="metric-value">8</div><div class="metric-sub metric-up">dari 14</div></div>
+            <div class="metric-card"><div class="metric-label">Rata-rata Kehadiran</div><div class="metric-value">93%</div></div>
+          </div>
+          <div class="card">
+            <div class="section-title"><i class="ti ti-users" aria-hidden="true"></i> Data Karyawan & Gaji</div>
+            <table>
+              <thead><tr><th>Nama</th><th>SPBU</th><th>Posisi</th><th>Gaji Pokok</th><th>Bonus</th><th>Total</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>Ahmad Fauzi</td><td>Soekarno Hatta</td><td>Operator</td><td>Rp 2.500.000</td><td>Rp 300.000</td><td>Rp 2.800.000</td><td><span class="status-badge status-lunas">Lunas</span></td></tr>
+                <tr><td>Budi Santoso</td><td>Soekarno Hatta</td><td>Operator</td><td>Rp 2.500.000</td><td>Rp 200.000</td><td>Rp 2.700.000</td><td><span class="status-badge status-lunas">Lunas</span></td></tr>
+                <tr><td>Citra Dewi</td><td>Dieng</td><td>Operator</td><td>Rp 2.500.000</td><td>Rp 250.000</td><td>Rp 2.750.000</td><td><span class="status-badge status-proses">Proses</span></td></tr>
+                <tr><td>Dani Pratama</td><td>Dieng</td><td>Operator</td><td>Rp 2.500.000</td><td>Rp 150.000</td><td>Rp 2.650.000</td><td><span class="status-badge status-proses">Proses</span></td></tr>
+                <tr><td>Eko Wahyudi</td><td>Soekarno Hatta</td><td>Kepala Shift</td><td>Rp 3.500.000</td><td>Rp 500.000</td><td>Rp 4.000.000</td><td><span class="status-badge status-lunas">Lunas</span></td></tr>
+                <tr><td>Fitri Handayani</td><td>Dieng</td><td>Kepala Shift</td><td>Rp 3.500.000</td><td>Rp 400.000</td><td>Rp 3.900.000</td><td><span class="status-badge status-lunas">Lunas</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- PAGE: LABA RUGI -->
+        <div id="page-labarugi" class="hidden">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div class="card">
+              <div class="section-title"><i class="ti ti-building-store" aria-hidden="true"></i> SPBU Soekarno Hatta — Juni 2025</div>
+              <div class="lr-section">Pendapatan</div>
+              <div class="lr-row"><span>Penjualan Pertalite</span><span>Rp 156.200.000</span></div>
+              <div class="lr-row"><span>Penjualan Pertamax</span><span>Rp 43.500.000</span></div>
+              <div class="lr-row"><span>Penjualan Solar</span><span>Rp 28.400.000</span></div>
+              <div class="lr-row" style="font-weight:500;"><span>Total Pendapatan</span><span>Rp 228.100.000</span></div>
+              <div class="lr-section">Beban</div>
+              <div class="lr-row"><span>HPP BBM</span><span style="color:#C62828;">Rp 185.000.000</span></div>
+              <div class="lr-row"><span>Gaji Karyawan</span><span style="color:#C62828;">Rp 21.000.000</span></div>
+              <div class="lr-row"><span>Operasional & Listrik</span><span style="color:#C62828;">Rp 3.500.000</span></div>
+              <div class="lr-row"><span>Perawatan</span><span style="color:#C62828;">Rp 1.200.000</span></div>
+              <div class="lr-row" style="font-weight:500;"><span>Total Beban</span><span style="color:#C62828;">Rp 210.700.000</span></div>
+              <div class="lr-total"><span>Laba Bersih</span><span class="laba-positive">Rp 17.400.000</span></div>
+            </div>
+            <div class="card">
+              <div class="section-title"><i class="ti ti-building-store" aria-hidden="true"></i> SPBU Dieng — Juni 2025</div>
+              <div class="lr-section">Pendapatan</div>
+              <div class="lr-row"><span>Penjualan Pertalite</span><span>Rp 142.800.000</span></div>
+              <div class="lr-row"><span>Penjualan Pertamax</span><span>Rp 38.700.000</span></div>
+              <div class="lr-row"><span>Penjualan Solar</span><span>Rp 31.200.000</span></div>
+              <div class="lr-row" style="font-weight:500;"><span>Total Pendapatan</span><span>Rp 212.700.000</span></div>
+              <div class="lr-section">Beban</div>
+              <div class="lr-row"><span>HPP BBM</span><span style="color:#C62828;">Rp 172.000.000</span></div>
+              <div class="lr-row"><span>Gaji Karyawan</span><span style="color:#C62828;">Rp 21.000.000</span></div>
+              <div class="lr-row"><span>Operasional & Listrik</span><span style="color:#C62828;">Rp 3.200.000</span></div>
+              <div class="lr-row"><span>Perawatan</span><span style="color:#C62828;">Rp 900.000</span></div>
+              <div class="lr-row" style="font-weight:500;"><span>Total Beban</span><span style="color:#C62828;">Rp 197.100.000</span></div>
+              <div class="lr-total"><span>Laba Bersih</span><span class="laba-positive">Rp 15.600.000</span></div>
+            </div>
+          </div>
+          <div class="card" style="margin-top:1rem;">
+            <div class="section-title"><i class="ti ti-report-money" aria-hidden="true"></i> Rekap Gabungan — Semua SPBU</div>
+            <div class="lr-row"><span>Total Pendapatan</span><span>Rp 440.800.000</span></div>
+            <div class="lr-row"><span>Total Beban</span><span style="color:#C62828;">Rp 407.800.000</span></div>
+            <div class="lr-total"><span>Laba Bersih Gabungan</span><span class="laba-positive" style="font-size:16px;">Rp 33.000.000</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var currentUser = {};
+
+function fillDemo(email, name, role, initials) {
+  document.getElementById('email-input').value = email;
+  document.getElementById('pass-input').value = '••••••••';
+  currentUser = { name, role, initials };
+}
+
+function doLogin() {
+  var email = document.getElementById('email-input').value;
+  if (!currentUser.name) {
+    if (email.includes('pemilik')) currentUser = { name: 'Pak Budi', role: 'Pemilik', initials: 'PB' };
+    else currentUser = { name: 'Bu Sari', role: 'Manajer', initials: 'BS' };
+  }
+  document.getElementById('login-screen').style.display = 'none';
+  var mainApp = document.getElementById('main-app');
+  mainApp.classList.remove('hidden');
+  mainApp.style.display = 'flex';
+  document.getElementById('user-avatar').textContent = currentUser.initials;
+  document.getElementById('user-name').textContent = currentUser.name;
+  document.getElementById('user-role').textContent = currentUser.role;
+  if (currentUser.role === 'Manajer') {
+    document.getElementById('spbu-selector').innerHTML = '<div class="spbu-chip active">SPBU Soekarno Hatta</div>';
+  }
+  buildBarChart();
+}
+
+function doLogout() {
+  currentUser = {};
+  document.getElementById('login-screen').style.display = 'flex';
+  var mainApp = document.getElementById('main-app');
+  mainApp.classList.add('hidden');
+  mainApp.style.display = 'none';
+  showPage('dashboard', document.querySelector('.nav-item'));
+}
+
+function showPage(page, el) {
+  ['dashboard','penjualan','karyawan','labarugi'].forEach(function(p) {
+    var el2 = document.getElementById('page-' + p);
+    if (el2) el2.classList.add('hidden');
+  });
+  var target = document.getElementById('page-' + page);
+  if (target) target.classList.remove('hidden');
+  document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
+  if (el) el.classList.add('active');
+  var titles = { dashboard: 'Dashboard', penjualan: 'Pencatatan Penjualan', karyawan: 'Karyawan & Gaji', labarugi: 'Laporan Laba Rugi' };
+  var subs = { dashboard: 'Ringkasan semua SPBU · Juni 2025', penjualan: 'Input & rekap transaksi BBM', karyawan: 'Data karyawan & penggajian', labarugi: 'Laporan keuangan per SPBU' };
+  document.getElementById('page-title').textContent = titles[page] || page;
+  document.getElementById('page-sub').textContent = subs[page] || '';
+}
+
+function selectSPBU(spbu, el) {
+  document.querySelectorAll('.spbu-chip').forEach(function(c) { c.classList.remove('active'); });
+  el.classList.add('active');
+}
+
+function buildBarChart() {
+  var days = ['5 Jun','6 Jun','7 Jun','8 Jun','9 Jun','10 Jun','11 Jun'];
+  var vals = [14200000, 16800000, 15400000, 17900000, 13600000, 19100000, 18400000];
+  var max = Math.max.apply(null, vals);
+  var chart = document.getElementById('bar-chart');
+  var daysEl = document.getElementById('bar-days');
+  if (!chart) return;
+  chart.innerHTML = '';
+  daysEl.innerHTML = '';
+  vals.forEach(function(v, i) {
+    var h = Math.round((v / max) * 90);
+    var wrap = document.createElement('div');
+    wrap.className = 'bar-wrap';
+    wrap.innerHTML = '<div class="bar-val">' + Math.round(v/1000000) + 'Jt</div><div class="bar" style="height:' + h + 'px;"></div>';
+    chart.appendChild(wrap);
+    var d = document.createElement('div');
+    d.style.flex = '1';
+    d.style.textAlign = 'center';
+    d.style.fontSize = '10px';
+    d.style.color = 'var(--color-text-secondary)';
+    d.textContent = days[i];
+    daysEl.appendChild(d);
+  });
+}
+</script>
